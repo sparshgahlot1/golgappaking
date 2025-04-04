@@ -77,6 +77,7 @@ const NavLinks = ({
   const pathname = usePathname()
 
   const links = [
+    { href: "/", label: "Home" },
     { href: "/aboutus", label: "About Us" },
     { href: "/franchise", label: "Franchise" },
     { href: "/vision", label: "Vision" },
