@@ -15,7 +15,7 @@ const Franchise = () => {
 />
     <InfiniteSlider/>
     <MarqueeFooter
-    title={["Start your business today with just ₹ 3 Lakhs*"]}
+    title={["Start your business today with just ₹ 1.5 Lakhs*"]}
     strokeColor="#FFD700"
     />
     <CallSlider/>

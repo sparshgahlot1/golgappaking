@@ -15,10 +15,10 @@ export default function CallSlider() {
   }
 
   return (
-    <div className="relative w-full bg-gradient-to-b from-purple-900 to-black flex items-end justify-center px-4 pb-6">
+    <div className="relative w-full flex items-end justify-center px-4 pb-6 pt-6">
       {/* CTA Image Slider */}
       {!showForm && (
-        <div ref={sliderRef} className="w-full max-w-xs h-16 bg-white rounded-full flex items-center px-2 relative">
+        <div ref={sliderRef} className="w-full max-w-xs h-16 bg-yellow-400 rounded-full flex items-center px-2 relative overflow-hidden">
           <motion.img
             src="/logo-01.png"
             alt="Slide to Answer"
@@ -27,7 +27,13 @@ export default function CallSlider() {
             dragConstraints={{ left: 0, right: 300 }}
             onDragEnd={handleDragEnd}
           />
-          <span className="ml-4 text-purple-800 font-semibold text-sm sm:text-base absolute left-16">Slide to Answer</span>
+          <motion.span
+            className="absolute right-50 text-red-600 text-2xl"
+            animate={{ x: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 1 }}
+          >
+             -->
+          </motion.span>
         </div>
       )}
 
@@ -73,7 +79,7 @@ export default function CallSlider() {
                 placeholder="PIN Code"
                 className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring text-sm"
               />
-              <button type="submit" className="rounded-xl text-white bg-purple-600 hover:bg-purple-700 py-2 text-sm">
+              <button type="submit" className="rounded-xl text-white bg-yellow-400 hover:bg-yellow-500 py-2 text-sm">
                 Submit
               </button>
             </form>
