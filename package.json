@@ -3,13 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  "dev": "next dev --turbopack",
-  "build": "next build && next export",
-  "start": "next start",
-  "lint": "next lint",
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d out"
-},
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "motion": "^12.6.2",
     "next": "15.2.4",

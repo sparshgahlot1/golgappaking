@@ -2,17 +2,19 @@
 
 import { useState, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import type { PanInfo } from "framer-motion";
 
 export default function CallSlider() {
   const [showForm, setShowForm] = useState(false)
-  const sliderRef = useRef(null)
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const handleDragEnd = (_, info) => {
-    const sliderWidth = sliderRef.current?.offsetWidth || 0
-    if (info.point.x >= sliderWidth - 80) {
-      setShowForm(true)
-    }
+  const handleDragEnd: (event: unknown, info: PanInfo) => void = (_, info) => {
+  const sliderWidth = sliderRef.current?.offsetWidth || 0;
+  if (info.point.x >= sliderWidth - 80) {
+    setShowForm(true);
   }
+};
+
 
   return (
     <div className="relative w-full flex items-end justify-center px-4 pb-6 pt-6">
@@ -28,11 +30,11 @@ export default function CallSlider() {
             onDragEnd={handleDragEnd}
           />
           <motion.span
-            className="absolute right-50 text-red-600 text-2xl"
+            className="absolute right-20 text-red-600 text-2xl inline-block"
             animate={{ x: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 1 }}
           >
-             -->
+             Swipe Right--{'>'}
           </motion.span>
         </div>
       )}

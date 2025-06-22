@@ -79,7 +79,7 @@ const NavLinks = ({
   const links = [
     { href: "/", label: "Home" },
     { href: "/aboutus", label: "About Us" },
-    { href: "/franchise", label: "Franchise" },
+    { href: "/becomeapartner", label: "Become a Partner" },
     { href: "/vision", label: "Vision" },
     { href: "/mission", label: "Mission" },
     { href: "/gallery", label: "Gallery" },

@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import Image from "next/image"
 
 interface WhatWeDoHeaderProps {
   title: [string]
@@ -12,8 +11,6 @@ interface WhatWeDoHeaderProps {
 
 const FranchiseHeader: React.FC<WhatWeDoHeaderProps> = ({
   title,
-  description,
-  imageSrc,
   strokeColor = "#E32227",
 }) => {
   return (

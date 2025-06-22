@@ -18,7 +18,7 @@ const Franchise = () => {
     title={["Start your business today with just ₹ 1.5 Lakhs*"]}
     strokeColor="#FFD700"
     />
-    <CallSlider/>
+    {/* <CallSlider/> */}
     </div>
   )
 }
