@@ -18,7 +18,7 @@ const page = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <p className="text-lg leading-relaxed text-white">
-              Our vision is to build India's first indigenous street food brand serving Indian chaat that is
+              Our vision is to build India&rsquo;s first indigenous street food brand serving Indian chaat that is
               healthier, hygienic, and supreme in taste and quality — redefining the way street chaat is
               experienced and served in India.
             </p>
