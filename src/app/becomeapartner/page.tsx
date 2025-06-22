@@ -2,7 +2,6 @@ import React from 'react'
 import InfiniteSlider from '../components/InfiniteSlider'
 import FranchiseHeader from '../components/franchiseHeader/FranchiseHeader'
 import MarqueeFooter from '../components/MarqueeFooter'
-import CallSlider from '../components/CallSlider'
 
 const Franchise = () => {
   return (
