@@ -45,7 +45,7 @@ export default function Page() {
       <ParallaxGallery images={images} />
       <ParallaxGallery images={images2} />
       <ParallaxGallery images={images3} />
-      <ParallaxGallery images={images} />
+      <ParallaxGallery images={images4} />
       <div className="h-screen"></div>
     </div>
   );
