@@ -1,15 +1,9 @@
-// src/app/components/CouponWizard.tsx
 "use client";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { QRCodeCanvas } from "qrcode.react";
-import Captcha from "./Captcha";
+import Captcha, { RecaptchaHandle } from "./Captcha";
 import Spinner from "./Spinner";
-import ReCAPTCHA from "react-google-recaptcha";
-
-const YELLOW = "#FFD600";
-const RED = "#D72638";
-const WHITE = "#FFF";
 
 type FormData = {
   name: string;
@@ -26,8 +20,8 @@ export default function CouponWizard() {
   const [rateLimited, setRateLimited] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, reset } = useForm<FormData>();
-  const captchaRef = useRef<ReCAPTCHA>(null);
+  const { register, handleSubmit } = useForm<FormData>();
+  const captchaRef = useRef<RecaptchaHandle>(null); // Proper custom ref type!
 
   async function checkRateLimit(email: string) {
     setLoading(true);
@@ -69,7 +63,7 @@ export default function CouponWizard() {
   function onStep3(data: FormData) {
     setFormData({ ...formData, mobile: data.mobile });
     setLoading(true);
-    (captchaRef.current as any)?.execute();
+    captchaRef.current?.execute();
   }
 
   async function onCaptchaSuccess(token: string | null) {
@@ -101,7 +95,7 @@ export default function CouponWizard() {
     "mb-2 block w-full rounded-lg border border-gray-200 py-2 px-4 bg-white focus:outline-none focus:border-red-500";
   const buttonClass =
     `w-full py-2 rounded-lg font-bold text-lg shadow transition-all ${loading ? "opacity-60 cursor-not-allowed" : ""}`;
-  const redBtn = buttonClass + ` bg-[${RED}] text-white hover:bg-[#ad1927]`;
+  const redBtn = buttonClass + ` bg-[#D72638] text-white hover:bg-[#ad1927]`;
   const yellowBox =
     "bg-[#FFD600] border-4 border-[#D72638] rounded-2xl shadow-lg p-8";
 
@@ -116,7 +110,7 @@ export default function CouponWizard() {
       >
         <div className="text-center mb-6">
           <span className="inline-block text-2xl font-extrabold tracking-wider"
-            style={{ color: RED }}>
+            style={{ color: "#D72638" }}>
             🎟️ GolGappaKing Coupon
           </span>
         </div>
@@ -129,20 +123,20 @@ export default function CouponWizard() {
 
         {step === 1 && (
           <form onSubmit={handleSubmit(onStep1)}>
-            <h2 className="text-lg font-bold mb-4" style={{ color: RED }}>
+            <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 1: Enter your details
             </h2>
             <input {...register("name", { required: true })}
               placeholder="Name"
               className={inputClass}
-              style={{ borderColor: RED }}
+              style={{ borderColor: "#D72638" }}
               disabled={loading}
             />
             <input {...register("email", { required: true })}
               placeholder="Email"
               type="email"
               className={inputClass}
-              style={{ borderColor: RED }}
+              style={{ borderColor: "#D72638" }}
               disabled={loading}
             />
             <button type="submit" className={redBtn} disabled={loading}>
@@ -153,13 +147,13 @@ export default function CouponWizard() {
 
         {step === 2 && (
           <form onSubmit={handleSubmit(onStep2)}>
-            <h2 className="text-lg font-bold mb-4" style={{ color: RED }}>
+            <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 2: Verify OTP
             </h2>
             <input {...register("otp", { required: true })}
               placeholder="Enter OTP"
               className={inputClass}
-              style={{ borderColor: RED }}
+              style={{ borderColor: "#D72638" }}
               disabled={loading}
             />
             {otpError && <div className="text-red-500">{otpError}</div>}
@@ -171,14 +165,14 @@ export default function CouponWizard() {
 
         {step === 3 && (
           <form onSubmit={handleSubmit(onStep3)}>
-            <h2 className="text-lg font-bold mb-4" style={{ color: RED }}>
+            <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 3: Enter mobile number
             </h2>
             <input {...register("mobile", { required: true })}
               placeholder="Mobile Number"
               type="tel"
               className={inputClass}
-              style={{ borderColor: RED }}
+              style={{ borderColor: "#D72638" }}
               disabled={loading}
             />
             <button type="submit" className={redBtn} disabled={loading}>
@@ -191,7 +185,7 @@ export default function CouponWizard() {
 
         {step === 4 && (
           <div className="text-center">
-            <h2 className="text-lg font-bold mb-4" style={{ color: RED }}>
+            <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 4: Your Coupon QR
             </h2>
             {qrToken ? (
@@ -202,7 +196,7 @@ export default function CouponWizard() {
                 </div>
               </div>
             ) : (
-              <Spinner size={48} color={RED} />
+              <Spinner size={48} color="#D72638" />
             )}
           </div>
         )}

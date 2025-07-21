@@ -2,15 +2,20 @@
 import { useEffect, useRef, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
-// Brand colors
 const YELLOW = "#FFD600";
 const RED = "#D72638";
 const WHITE = "#FFF";
 
+interface CouponInfo {
+  name?: string;
+  email?: string;
+  mobile?: string;
+  ts?: number;
+}
+
 export default function CartManagerPage() {
-  const [result, setResult] = useState<string | null>(null);
   const [message, setMessage] = useState("");
-  const [couponInfo, setCouponInfo] = useState<any>(null);
+  const [couponInfo, setCouponInfo] = useState<CouponInfo | null>(null);
   const scannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,10 +27,8 @@ export default function CartManagerPage() {
         false
       );
       scanner.render(
-        async (decodedText) => {
-          setResult(decodedText);
+        async (decodedText: string) => {
           setMessage("Processing...");
-          // Send JWT (decodedText) to redemption API
           const res = await fetch("/api/redeem", {
             method: "POST",
             body: JSON.stringify({ token: decodedText }),
@@ -34,11 +37,14 @@ export default function CartManagerPage() {
           const json = await res.json();
           setMessage(json.message);
           setCouponInfo(json.details || null);
-          setTimeout(() => setResult(null), 2000); // Allow rescan after 2s
-          scanner?.clear(); // stop after first scan
+          setTimeout(() => {
+            setCouponInfo(null);
+            setMessage("");
+          }, 2000);
+          scanner?.clear();
         },
-        (errorMessage) => {
-          // Optionally display error message
+        (_errorMessage: string) => {
+          // No-op: you can show an error if you want!
         }
       );
     }
@@ -153,9 +159,8 @@ export default function CartManagerPage() {
         )}
         <button
           onClick={() => {
-            setResult(null);
-            setMessage("");
             setCouponInfo(null);
+            setMessage("");
             window.location.reload();
           }}
           style={{

@@ -7,11 +7,19 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
+// Strictly type the payload
+interface CouponPayload {
+  name: string;
+  email: string;
+  mobile: string;
+  ts: number;
+}
+
 export async function POST(req: NextRequest) {
   const { token } = await req.json();
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    const { email, mobile, ts } = data;
+    const data = jwt.verify(token, process.env.JWT_SECRET!) as CouponPayload;
+    const { email, ts } = data;
     const couponKey = `coupon:redeemed:${email}:${ts}`;
     const alreadyUsed = await redis.get(couponKey);
 
