@@ -1,11 +1,12 @@
-import FranchiseForm from "./components/FranchiseForm";
+
+import CouponWizard from "./components/CouponWizard";
 import Header from "./components/Header";
 
 export default function Home() {
   return (
     <>
       <Header/>
-       <FranchiseForm />
+       <CouponWizard />
     </>
   );
 }
