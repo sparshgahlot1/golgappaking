@@ -40,7 +40,7 @@ export default function CartManagerPage() {
           setTimeout(() => {
             setCouponInfo(null);
             setMessage("");
-          }, 2000);
+          }, 5000);
           scanner?.clear();
         },
         () => {
