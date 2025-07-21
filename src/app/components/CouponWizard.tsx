@@ -39,7 +39,10 @@ export default function CouponWizard() {
     if (!(await checkRateLimit(data.email))) return;
     setLoading(true);
     setFormData({ name: data.name, email: data.email });
-    await fetch("/api/otp", { method: "POST", body: JSON.stringify({ email: data.email }) });
+    await fetch("/api/otp", {
+      method: "POST",
+      body: JSON.stringify({ email: data.email }),
+    });
     setStep(2);
     setLoading(false);
   }
@@ -93,8 +96,7 @@ export default function CouponWizard() {
   // Style helpers
   const inputClass =
     "mb-2 block w-full rounded-lg border border-gray-200 py-2 px-4 bg-white focus:outline-none focus:border-red-500";
-  const buttonClass =
-    `w-full py-2 rounded-lg font-bold text-lg shadow transition-all ${loading ? "opacity-60 cursor-not-allowed" : ""}`;
+  const buttonClass = `w-full py-2 rounded-lg font-bold text-lg shadow transition-all ${loading ? "opacity-60 cursor-not-allowed" : ""}`;
   const redBtn = buttonClass + ` bg-[#D72638] text-white hover:bg-[#ad1927]`;
   const yellowBox =
     "bg-[#FFD600] border-4 border-[#D72638] rounded-2xl shadow-lg p-8";
@@ -109,8 +111,10 @@ export default function CouponWizard() {
         }}
       >
         <div className="text-center mb-6">
-          <span className="inline-block text-2xl font-extrabold tracking-wider"
-            style={{ color: "#D72638" }}>
+          <span
+            className="inline-block text-2xl font-extrabold tracking-wider"
+            style={{ color: "#D72638" }}
+          >
             🎟️ GolGappaKing Coupon
           </span>
         </div>
@@ -126,13 +130,15 @@ export default function CouponWizard() {
             <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 1: Enter your details
             </h2>
-            <input {...register("name", { required: true })}
+            <input
+              {...register("name", { required: true })}
               placeholder="Name"
               className={inputClass}
               style={{ borderColor: "#D72638" }}
               disabled={loading}
             />
-            <input {...register("email", { required: true })}
+            <input
+              {...register("email", { required: true })}
               placeholder="Email"
               type="email"
               className={inputClass}
@@ -150,7 +156,8 @@ export default function CouponWizard() {
             <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 2: Verify OTP
             </h2>
-            <input {...register("otp", { required: true })}
+            <input
+              {...register("otp", { required: true })}
               placeholder="Enter OTP"
               className={inputClass}
               style={{ borderColor: "#D72638" }}
@@ -168,7 +175,8 @@ export default function CouponWizard() {
             <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 3: Enter mobile number
             </h2>
-            <input {...register("mobile", { required: true })}
+            <input
+              {...register("mobile", { required: true })}
               placeholder="Mobile Number"
               type="tel"
               className={inputClass}
@@ -190,7 +198,12 @@ export default function CouponWizard() {
             </h2>
             {qrToken ? (
               <div className="flex flex-col items-center gap-4">
-                <span className="font-semibold">Show this QR at the Cart</span>
+                <span className="font-semibold text-[#D72638] text-base">
+                  Please <b>take a screenshot</b> of this QR and show it at the
+                  Cart Counter.
+                  <br />
+                  (यह QR स्क्रीनशॉट ले लें और काउंटर पर दिखाएँ)
+                </span>
                 <div className="bg-white p-4 rounded-xl border-2 border-[#FFD600] shadow-md">
                   <QRCodeCanvas value={qrToken} size={220} />
                 </div>

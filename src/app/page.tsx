@@ -7,6 +7,7 @@ export default function Home() {
     <>
       <Header/>
        <CouponWizard />
+       <div className="h-10"></div>
     </>
   );
 }
