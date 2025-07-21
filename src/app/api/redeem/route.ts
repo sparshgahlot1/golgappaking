@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       message: "Coupon valid & redeemed!",
       details: data,
     });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, message: "Invalid or expired coupon!" });
+  } catch {
+     return NextResponse.json({ success: false, message: "Invalid or expired coupon!" });
   }
 }

@@ -43,7 +43,7 @@ export default function CartManagerPage() {
           }, 2000);
           scanner?.clear();
         },
-        (_errorMessage: string) => {
+        () => {
           // No-op: you can show an error if you want!
         }
       );
