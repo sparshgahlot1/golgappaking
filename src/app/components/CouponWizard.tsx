@@ -1,8 +1,8 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { QRCodeCanvas } from "qrcode.react";
-import Captcha, { RecaptchaHandle } from "./Captcha";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Spinner from "./Spinner";
 
 type FormData = {
@@ -21,7 +21,7 @@ export default function CouponWizard() {
   const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit } = useForm<FormData>();
-  const captchaRef = useRef<RecaptchaHandle>(null); // Proper custom ref type!
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   async function checkRateLimit(email: string) {
     setLoading(true);
@@ -63,33 +63,47 @@ export default function CouponWizard() {
     }
   }
 
-  function onStep3(data: FormData) {
+  async function onStep3(data: FormData) {
     setFormData({ ...formData, mobile: data.mobile });
     setLoading(true);
-    captchaRef.current?.execute();
-  }
 
-  async function onCaptchaSuccess(token: string | null) {
-    if (!token) return;
-    // Verify captcha on backend
+    // v3 recaptcha: Get a token for action "coupon_submit"
+    if (!executeRecaptcha) {
+      setLoading(false);
+      alert("reCAPTCHA not yet loaded, please try again.");
+      return;
+    }
+    const token = await executeRecaptcha("coupon_submit");
+    if (!token) {
+      setLoading(false);
+      alert("reCAPTCHA verification failed. Try again.");
+      return;
+    }
+
+    // Verify token on backend (should check the score there)
     const res = await fetch("/api/verify-captcha", {
       method: "POST",
       body: JSON.stringify({ token }),
+      headers: { "Content-Type": "application/json" },
     });
     const json = await res.json();
-    if (json.success) {
-      // Generate QR JWT
-      const resp = await fetch("/api/jwt", {
-        method: "POST",
-        body: JSON.stringify({
-          ...formData,
-          mobile: formData.mobile,
-        }),
-      });
-      const qrJson = await resp.json();
-      setQrToken(qrJson.token);
-      setStep(4);
+    if (!json.success || json.score < 0.5) {
+      setLoading(false);
+      alert("Suspicious activity detected. Please try again later.");
+      return;
     }
+
+    // Generate QR JWT
+    const resp = await fetch("/api/jwt", {
+      method: "POST",
+      body: JSON.stringify({
+        ...formData,
+        mobile: data.mobile,
+      }),
+    });
+    const qrJson = await resp.json();
+    setQrToken(qrJson.token);
+    setStep(4);
     setLoading(false);
   }
 
@@ -146,7 +160,11 @@ export default function CouponWizard() {
               disabled={loading}
             />
             <button type="submit" className={redBtn} disabled={loading}>
-              {loading ? <Spinner /> : "Send OTP"}
+              {loading ? (
+                <span className="opacity-100"><Spinner /></span>
+              ) : (
+                "Send OTP"
+              )}
             </button>
           </form>
         )}
@@ -165,7 +183,11 @@ export default function CouponWizard() {
             />
             {otpError && <div className="text-red-500">{otpError}</div>}
             <button type="submit" className={redBtn} disabled={loading}>
-              {loading ? <Spinner /> : "Verify"}
+              {loading ? (
+                <span className="opacity-100"><Spinner /></span>
+              ) : (
+                "Verify"
+              )}
             </button>
           </form>
         )}
@@ -184,10 +206,13 @@ export default function CouponWizard() {
               disabled={loading}
             />
             <button type="submit" className={redBtn} disabled={loading}>
-              {loading ? <Spinner /> : "Continue"}
+              {loading ? (
+                <span className="opacity-100"><Spinner /></span>
+              ) : (
+                "Continue"
+              )}
             </button>
-            {/* Invisible Captcha */}
-            <Captcha ref={captchaRef} onSuccess={onCaptchaSuccess} />
+            {/* No more Captcha UI! */}
           </form>
         )}
 
@@ -209,7 +234,7 @@ export default function CouponWizard() {
                 </div>
               </div>
             ) : (
-              <Spinner size={48} color="#D72638" />
+              <Spinner size={48} color="#FFD600" />
             )}
           </div>
         )}

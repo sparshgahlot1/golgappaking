@@ -1,6 +1,5 @@
-// src/app/components/Spinner.tsx
 "use client";
-export default function Spinner({ size = 24, color = "#D72638" }) {
+export default function Spinner({ size = 24, color = "#FFD600" }) {
   return (
     <svg
       className="animate-spin mx-auto"
