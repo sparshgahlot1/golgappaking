@@ -20,6 +20,8 @@ export async function POST(req: NextRequest) {
   try {
     const data = jwt.verify(token, process.env.JWT_SECRET!) as CouponPayload;
     const { email, ts } = data;
+
+    // Prevent double-redeem using a unique key per coupon
     const couponKey = `coupon:redeemed:${email}:${ts}`;
     const alreadyUsed = await redis.get(couponKey);
 
@@ -31,13 +33,18 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Mark this coupon as redeemed (for auditing)
     await redis.set(couponKey, Date.now());
+
+    // DELETE the active coupon key so it cannot be used again!
+    await redis.del(`coupon:active:${email}`);
+
     return NextResponse.json({
       success: true,
       message: "Coupon valid & redeemed!",
       details: data,
     });
   } catch {
-     return NextResponse.json({ success: false, message: "Invalid or expired coupon!" });
+    return NextResponse.json({ success: false, message: "Invalid or expired coupon!" });
   }
 }

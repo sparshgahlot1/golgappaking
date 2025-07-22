@@ -19,6 +19,7 @@ export default function CouponWizard() {
   const [qrToken, setQrToken] = useState<string | null>(null);
   const [rateLimited, setRateLimited] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [existingCoupon, setExistingCoupon] = useState<string | null>(null);
 
   const { register, handleSubmit } = useForm<FormData>();
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -30,9 +31,22 @@ export default function CouponWizard() {
       body: JSON.stringify({ email }),
     });
     const data = await res.json();
-    setRateLimited(!data.allowed);
     setLoading(false);
-    return data.allowed;
+
+    // Show old coupon if exists and not redeemed
+    if (!data.allowed && data.reason === "active_coupon" && data.coupon) {
+      setExistingCoupon(data.coupon);
+      setQrToken(data.coupon);
+      setStep(4);
+      return false;
+    }
+    // Still block if under 7-day lock (but no active coupon)
+    if (!data.allowed && data.reason === "already_claimed") {
+      setRateLimited(true);
+      return false;
+    }
+    setRateLimited(false);
+    return true;
   }
 
   async function onStep1(data: FormData) {
@@ -135,11 +149,11 @@ export default function CouponWizard() {
 
         {rateLimited && (
           <div className="text-red-600 mb-4 font-semibold text-center">
-            Too many attempts. Please try later.
+            You have already generated a coupon this week. Please try again next week!
           </div>
         )}
 
-        {step === 1 && (
+        {step === 1 && !rateLimited && (
           <form onSubmit={handleSubmit(onStep1)}>
             <h2 className="text-lg font-bold mb-4" style={{ color: "#D72638" }}>
               Step 1: Enter your details
@@ -212,7 +226,6 @@ export default function CouponWizard() {
                 "Continue"
               )}
             </button>
-            {/* No more Captcha UI! */}
           </form>
         )}
 
@@ -232,6 +245,11 @@ export default function CouponWizard() {
                 <div className="bg-white p-4 rounded-xl border-2 border-[#FFD600] shadow-md">
                   <QRCodeCanvas value={qrToken} size={220} />
                 </div>
+                {existingCoupon && (
+                  <div className="text-xs text-gray-600 mt-2">
+                    (This coupon is still valid and has not been redeemed yet.)
+                  </div>
+                )}
               </div>
             ) : (
               <Spinner size={48} color="#FFD600" />
